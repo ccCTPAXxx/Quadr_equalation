@@ -35,6 +35,7 @@ But still, the flags are really cool; you can familiarize yourself with them by 
 
 You can read the coefficients of a quadratic equation from a certain file and write them to another file in a convenient and visually appealing format.
 
+<img width="1086" height="446" alt="files_work_demonstration" src="https://github.com/user-attachments/assets/70706dd1-bf6f-4704-b49a-033ba95938e7" />
 
 
 
