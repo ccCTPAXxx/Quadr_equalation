@@ -8,13 +8,17 @@ This amazing program has many features, which will be described below, but belie
 
 ## Building quard
 
-If you want to build my program and experiment with it yourself, you can simply run **build.bat** on your device after installing my project. The program will greet you and provide further instructions on how to proceed.
+If you want to build my program and experiment with it yourself, you can simply run 
+```sh
+build.bat
+``` 
+on your device after installing my project. The program will greet you and provide further instructions on how to proceed.
 
 ### Compilation flags
 
 In the current version of the program, only compilation with a single flag is available.
 
-But still, the flags are really cool; you can familiarize yourself with them by entering **--help**; you can learn more about what the flags do by reviewing the **console_helper.h** file or down in README.
+But still, the flags are really cool; you can familiarize yourself with them by entering `--help`; you can learn more about what the flags do by reviewing the **console_helper.h** file or down in README.
 
 
 - **--help**  *Shows the list of cmd commands to user*
