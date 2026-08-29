@@ -1,3 +1,5 @@
-Your eq looks like:  x^2 +2x +1 = 0
-Your eq. has 1 sol:
-	x1 = -1.00
+Your eq looks like:   2x^2 +3x +4 = 0
+Your eq. has no solutions in real nums(
+Your eq. has 2 complex solutions:
+	x1 = -0.75 - 1.2i
+	x2 = -0.75 + 1.2i

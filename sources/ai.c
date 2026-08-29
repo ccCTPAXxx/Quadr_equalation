@@ -5,9 +5,9 @@
 #include <math.h>
 
 
-#include "console_helper.h"
-#include "tag_and_toy.h"
-#include "functions.h"
+#include "../headers/console_helper.h"
+#include "../headers/tag_and_toy.h"
+#include "../headers/functions.h"
 
 
 #define POLE_WIDTH 3

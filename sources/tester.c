@@ -82,7 +82,7 @@ int run_one_quard_test(coefs quard_coefs, solutions_state num_of_sol_ref, double
 
 int parse_file(char* file_name, int* all_tests, int* succsesfull_tests) {
 	
-	char path_name[BUFFSIZE] = "files/"; 
+	char path_name[BUFFSIZE] = "examples/"; 
 	coefs quard_coefs = {.a_coef = NAN, .b_coef = NAN, .c_coef = NAN};
 	int solution_ref = -1;
 	double x1_ref = NAN, x2_ref = NAN;
@@ -136,7 +136,7 @@ int run_tests_quard () {
 		parse_file(buffer, &all_tests, &succsesfull_tests);
 		
 		if (all_tests) {
-			printf("Succsesfull %%: %lg\n", (double)succsesfull_tests / all_tests)	;
+			printf("Succsesfull: %lg out of 1\n", (double)succsesfull_tests / all_tests)	;
 		} else {
 			printf("No tests runned(((\n");
 		}
@@ -150,7 +150,7 @@ int run_tests_quard () {
 
 int run_tests_parser () {
 	char buffer[BUFFSIZE] = {};
-	char path_name[BUFFSIZE] = "files/";
+	char path_name[BUFFSIZE] = "examples/";
 	FILE *pf = NULL;
 	
 	printf("Hi, this is parser_tester!\n");

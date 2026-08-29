@@ -2,9 +2,9 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-#include "console_helper.h"
-#include "ai.h"
-#include "tester.h"
+#include "../headers/console_helper.h"
+#include "../headers/ai.h"
+#include "../headers/tester.h"
 
 bool c_help(int argc, char** argv, enum speak_mode* SPEAK_MODE, int* tokens);
 bool c_version(int argc, char** argv, enum speak_mode* SPEAK_MODE, int* tokens);

@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "ai.h"
+#include "../headers/ai.h"
 
 #define X_SIZE 3
 #define Y_SIZE 3
@@ -88,7 +88,7 @@ int minimax(char* position, unsigned int depth, bool is_maximazing) {
 }
 
 void computer_move(char* position, char player) {
-	double random_chance = 0.3;
+	double random_chance = 0.0;
 	int best_move = -1;
 	
 	double random = ((double)random_num(0, 100) / 100);

@@ -6,10 +6,10 @@
 #include <windows.h>
 #include <time.h>
 
-#include "functions.h"
-#include "tester.h"
-#include "ai.h"
-#include "console_helper.h"
+#include "../headers/functions.h"
+#include "../headers/tester.h"
+#include "../headers/ai.h"
+#include "../headers/console_helper.h"
 
 
 //‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐

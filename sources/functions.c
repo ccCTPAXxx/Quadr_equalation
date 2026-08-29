@@ -7,7 +7,7 @@
 #include <assert.h>
 #include <windows.h>
 
-#include "functions.h"
+#include "../headers/functions.h"
 
 
 void eat_char() {
@@ -144,10 +144,24 @@ enum SOLUTONS_NUM linear(double b_coef, double c_coef, double *x1) {
 	return ONE_SOLUTION;
 }
 
+enum SOLUTONS_NUM experimental_solve(coefs quard_coefs, double *x1, double *x2) {
+	printf("Experiments will be here later, i m tired, sorry((\n");
+}
+
 
 enum SOLUTONS_NUM solve(coefs quard_coefs, double *x1, double *x2) {
 	assert(x1 != NULL); assert(x2 != NULL); assert(x1 != x2);
 	
+	printf("Do you want to try some experiments?)) (y/n) ");
+	if (getchar() == 'y') {
+		eat_char();
+		
+		experimental_solve(quard_coefs, x1, x2);
+		
+		
+	} else {
+		eat_char();
+	}
 	
 	if (double_eq(quard_coefs.a_coef, 0, 1e-5)) {
 		return linear(quard_coefs.b_coef, quard_coefs.c_coef, x1);
@@ -274,7 +288,7 @@ int enter_coef(coefs* quard_coefs, bool *first_time_f, char* curr_input) {
 	
 	char tryier = 0;
 	char buffer[BUFFSIZE];
-	char path_name[BUFFSIZE] = "files/";
+	char path_name[BUFFSIZE] = "examples/";
 	
 	if (!*first_time_f && tolower(getchar()) != 'c') {
 		printf("You exited my program("); exit(0);
@@ -326,10 +340,11 @@ int enter_coef(coefs* quard_coefs, bool *first_time_f, char* curr_input) {
 		
 		
 	} else if (check_if_txt(curr_input)) {
-		FILE* pf = fopen(strcat(path_name, curr_input), "r");
+		strcat(path_name, curr_input);
+		FILE* pf = fopen(path_name, "r");
 		if (pf == NULL) {
 			printf("Error while opening file %s"
-				   "\nTry again (enter any symb. to exit, c to continue).\n", curr_input);
+				   "\nTry again (enter any symb. to exit, c to continue).\n", path_name);
 			
 			return FILE_ERROR;
 		} else {
@@ -398,7 +413,7 @@ void display_complex(FILE *pf, complex_num *x1, complex_num *x2) {
 
 enum RETURN_CODES write_to_file(coefs quard_coefs, double x1, double x2, enum SOLUTONS_NUM root_status) {
 	char save_file[BUFFSIZE];
-	char path_name[BUFFSIZE] = "files/";
+	char path_name[BUFFSIZE] = "examples/";
 	FILE *fp = NULL;
 	
 	while (true) {
