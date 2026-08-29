@@ -1,23 +1,19 @@
-#include "functions.h"
-
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
 #include <string.h>
+#include <ctype.h>
 
-#include "tester.h"
+#include "headers/tester.h"
+#include "headers/functions.h"
 
 
-int main_tester(int argc, char** argv) {
+bool main_tester(int argc, char** argv, enum speak_mode* SPEAK_MODE, int* tokens) {
 	if (argc != 3) {
 		printf("Wrong num of arguments, ERROR\n"); 
 		return -1;
 	}
 	
-	if (strcmp(argv[1], "test") != 0) {
-		printf("Unknown argument %s, ERROR\n", argv[1]);
-		return -1;
-	}
 	
 	if (!strcmp(argv[2], "quard")) run_tests_quard();
 	else if (!strcmp(argv[2], "parser")) run_tests_parser();
@@ -59,7 +55,7 @@ int run_one_quard_test(coefs quard_coefs, solutions_state num_of_sol_ref, double
 		if (x1 < x2) swap(&x1, &x2);
 		if (x1_ref < x2_ref) swap(&x1, &x2);
 		
-		if ((x1 == x1_ref) && (x2 == x2_ref)) {printf("LALALLA"); return 0;}
+		if ((x1 == x1_ref) && (x2 == x2_ref)) {printf("ERROR"); return 0;}
 		else {
 			print_failed_test(quard_coefs, num_of_sol_ref, x1_ref, x2_ref, x1, x2, num_of_sol);
 			return -1;
@@ -77,16 +73,16 @@ int run_one_quard_test(coefs quard_coefs, solutions_state num_of_sol_ref, double
 	
 	if (num_of_sol == INF_SOLUTIONS) return 0;
 	
+	//TODO
 	
 	if (num_of_sol == NO_SOLUTION) return 0;
-//	complex_num x1_c = { .real = 0, .imag = 0}, x2_c = {.real = 0, .imag = 0};
-//	complex_f(a_coef, b_coef, c_coef, &x1_c, &x2_c);
-
+	
+	//TODO
 }
 
-int parse_file(char* file_name) {
+int parse_file(char* file_name, int* all_tests, int* succsesfull_tests) {
 	
-	//char* test_buffer[BUFFSIZE]; 
+	char path_name[BUFFSIZE] = "files/"; 
 	coefs quard_coefs = {.a_coef = NAN, .b_coef = NAN, .c_coef = NAN};
 	int solution_ref = -1;
 	double x1_ref = NAN, x2_ref = NAN;
@@ -95,7 +91,7 @@ int parse_file(char* file_name) {
 	
 	if (check_if_txt(file_name)) 
 	{
-		FILE *pf = fopen(file_name, "r");
+		FILE *pf = fopen(strcat(path_name, file_name), "r");
 		if (pf == NULL) {
 			printf("Error while opening file %s"
 				   "\nTry again (enter any symb. to exit, c to continue).\n", file_name);
@@ -108,7 +104,10 @@ int parse_file(char* file_name) {
 			
 			while ((fscanf(pf, "%lf %lf %lf %d %lf %lf", &(quard_coefs.a_coef), &(quard_coefs.b_coef), &(quard_coefs.c_coef),
 						   &solution_ref, &x1_ref, &x2_ref) == 6) && getc(pf) == '\n') {
-				run_one_quard_test(quard_coefs, solution_ref, x1_ref, x2_ref);
+				
+				*all_tests += 1;
+				
+				*succsesfull_tests += 1 + run_one_quard_test(quard_coefs, solution_ref, x1_ref, x2_ref);
 			}
 			fclose(pf);
 			return OK;
@@ -120,26 +119,38 @@ int parse_file(char* file_name) {
 	}
 }
 
+
 int run_tests_quard () {
-	
 	char buffer[BUFFSIZE];
 	
 	printf("Hi, this is quard_tester!\n");
 	
 	
-	while (true) {
+	while (true) {	
+		int all_tests = 0;
+		int succsesfull_tests = 0;
+		
 		printf("Enter the name of file.txt where you want to test quard: ");
 		fgets(buffer, BUFFSIZE, stdin); *strchr(buffer, '\n') = '\0';
 		
-		parse_file(buffer);
+		parse_file(buffer, &all_tests, &succsesfull_tests);
 		
-		if (getchar() != 'c') break;
+		if (all_tests) {
+			printf("Succsesfull %%: %lg\n", (double)succsesfull_tests / all_tests)	;
+		} else {
+			printf("No tests runned(((\n");
+		}
+		
+		
+		if (tolower(getchar()) != 'c') break;
+		eat_char();
 	}
 	
 }
 
 int run_tests_parser () {
 	char buffer[BUFFSIZE] = {};
+	char path_name[BUFFSIZE] = "files/";
 	FILE *pf = NULL;
 	
 	printf("Hi, this is parser_tester!\n");
@@ -147,7 +158,7 @@ int run_tests_parser () {
 	while (true) {
 		printf("Enter the name of file.txt where you want to test parser: ");
 		fgets(buffer, BUFFSIZE, stdin); *strchr(buffer, '\n') = '\0';
-		pf = fopen(buffer, "r");
+		pf = fopen(strcat(path_name, buffer), "r");
 		if(!(pf == NULL)) printf("Opened \n");
 		while (fgets(buffer, BUFFSIZE, pf)) {
 			*strchr(buffer, '\n') = '\0';

@@ -7,7 +7,7 @@
 #include <assert.h>
 #include <windows.h>
 
-#include "functions.h"
+#include "headers/functions.h"
 
 
 void eat_char() {
@@ -24,32 +24,27 @@ void print_line(int num_of_symb) {
 }
 
 
-int correct_display(coefs quard_coefs, FILE* pf) {
+void correct_display(coefs quard_coefs, FILE* pf) {
 	
 	fprintf(pf, "Your eq looks like: ");
 	if (quard_coefs.a_coef) {
-		if (absolute(quard_coefs.a_coef) == 1) {
+		if (fabs(quard_coefs.a_coef) == 1) {
 			fprintf(pf, "%cx^2 ", (quard_coefs.a_coef < 0)? '-' : ' ');
 		} else {
-			fprintf(pf, "%c %lgx^2 ", (quard_coefs.a_coef < 0)? '-' : ' ', absolute(quard_coefs.a_coef));
+			fprintf(pf, "%c %lgx^2 ", (quard_coefs.a_coef < 0)? '-' : ' ', fabs(quard_coefs.a_coef));
 		}
 	}
 	if (quard_coefs.b_coef) {
-		if (absolute(quard_coefs.b_coef) == 1) {
+		if (fabs(quard_coefs.b_coef) == 1) {
 			fprintf(pf, "%cx ", (quard_coefs.b_coef < 0)? '-' : '+');
 		} else {
-			fprintf(pf, "%c%lgx ", (quard_coefs.b_coef < 0)? '-' : '+', absolute(quard_coefs.b_coef));
+			fprintf(pf, "%c%lgx ", (quard_coefs.b_coef < 0)? '-' : '+', fabs(quard_coefs.b_coef));
 		}
 	}
 	if (quard_coefs.c_coef) {
-		fprintf(pf, "%c%lg", (quard_coefs.c_coef < 0)? '-' : '+', absolute(quard_coefs.c_coef));
+		fprintf(pf, "%c%lg", (quard_coefs.c_coef < 0)? '-' : '+', fabs(quard_coefs.c_coef));
 	}
 	fprintf(pf, " = 0\n");
-	
-	
-//		printf("Your eq looks like: %.0lfx^2 %c %.0lfx %c %.0lf = 0\n", 
-//			   quard_coefs -> a_coef, (quard_coefs -> b_coef < 0)? '-' : '+', absolute(quard_coefs -> b_coef),
-//			   (quard_coefs -> c_coef < 0)? '-' : '+', absolute(quard_coefs -> c_coef));
 }
 
 
@@ -61,14 +56,14 @@ void look_on_dif_num (enum SOLUTONS_NUM root_status, double x1, double x2, FILE*
 		
 	case TWO_SOLUTIONS:
 		fprintf(file_pointer, "Your eq. has 2 sol:\n"
-				"\tx1 = %.2lf\n"
-				"\tx2 = %.2lf\n", 
+				"\tx1 = %.2lg\n"
+				"\tx2 = %.2lg\n", 
 				x1, x2);
 		break;
 		
 	case ONE_SOLUTION:
 		fprintf(file_pointer, "Your eq. has 1 sol:\n"
-				"\tx1 = %.2lf\n", x1);
+				"\tx1 = %.2lg\n", x1);
 		break;
 		
 	case NO_SOLUTION:
@@ -96,13 +91,6 @@ void look_on_dif_num (enum SOLUTONS_NUM root_status, double x1, double x2, FILE*
 }
 
 
-//‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐
-//! Checks if file is txt.
-//!
-//! @param [in] curr_input name of file (char*)
-//!
-//! @return if file is txt (true)
-//‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐---------------
 bool check_if_txt(char* curr_input) {	
 	assert(curr_input != NULL);
 	
@@ -118,69 +106,31 @@ bool check_if_txt(char* curr_input) {
 }
 
 
-//‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐
-//! Solves a square equation ax^2 + bx + c = 0 in complex numbers
-//!
-//! @param [in] a a‐coefficient (double)
-//! @param [in] b b‐coefficient (double)
-//! @param [in] c c‐coefficient (double)
-//! @param [out] x1 Pointer to the 1st root (complex_num*)
-//! @param [out] x2 Pointer to the 2nd root (complex_num*)
-//!
-//! @return (void)
-//‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐---------------
 void complex_f(coefs quard_coefs, complex_num *x1, complex_num *x2) {
 	assert(quard_coefs.a_coef != 0);
 	assert(x1 != NULL); assert(x2 != NULL);
 	
 	x1 -> real = x2 -> real = -quard_coefs.b_coef / (2 * quard_coefs.a_coef);
+	
 	double min_D = -(quard_coefs.b_coef * quard_coefs.b_coef - 4 * quard_coefs.a_coef * quard_coefs.c_coef); 
+	
 	x1 -> imag = -(x2 -> imag = sqrt(min_D) / (2 * quard_coefs.a_coef));
 }
 
 
-//‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐
-//! Says hello to user!
-//!
-//! @param [in] (void)
-//!
-//! @return (void)
-//!
-//! @note Adds a bit friendly interface
-//‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐---------------
+
 void hello() {
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_RED);
 	print_line(200);
 	printf("Hi, this program can solve quadratic equalitions!!!\n"
-		   "\tWritten by Ivan.\n");
+		   "\tWritten by Ivan.\n"
+		   "\n\t --help to see more info\n");
 	print_line(200);
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_GREEN | FOREGROUND_RED);
 	
 }
 
 
-//‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐
-//! Find abs of your double num with this function
-//!
-//! @param [in] num to make abs (double)
-//!
-//! @return abs_meaning (double)
-//‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐---------------
-double absolute(double num) {
-	return((num < 0)? -num : num);
-}
-
-
-//‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐
-//! Solves a square linear bx + c = 0
-//!
-//! @param [in] b b‐coefficient (double)
-//! @param [in] c c‐coefficient (double)
-//! @param [out] x1 Pointer to the root (double*)
-//!
-//! @return Number of roots (int)
-//!
-//! @note In case of infinite number of roots,
-//! returns INF_SOLUTIONS.
-//‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐---------------
 enum SOLUTONS_NUM linear(double b_coef, double c_coef, double *x1) {	
 	assert(x1 != NULL);
 	
@@ -195,20 +145,6 @@ enum SOLUTONS_NUM linear(double b_coef, double c_coef, double *x1) {
 }
 
 
-//‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐
-//! Solves a square equation ax^2 + bx + c = 0
-//!
-//! @param [in] a a‐coefficient (double)
-//! @param [in] b b‐coefficient (double)
-//! @param [in] c c‐coefficient (double)
-//! @param [out] x1 Pointer to the 1st root (double*)
-//! @param [out] x2 Pointer to the 2nd root (double*)
-//!
-//! @return Number of roots (int)
-//!
-//! @note In case of infinite number of roots,
-//! returns INF_SOLUTIONS.
-//‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐---------------
 enum SOLUTONS_NUM solve(coefs quard_coefs, double *x1, double *x2) {
 	assert(x1 != NULL); assert(x2 != NULL); assert(x1 != x2);
 	
@@ -232,29 +168,19 @@ enum SOLUTONS_NUM solve(coefs quard_coefs, double *x1, double *x2) {
 }
 
 
-//‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐
-//! Reads a, b, c koeffs for quadr. eq. from file
-//!
-//! @param [out] a a‐coefficient (double*)
-//! @param [out] b b‐coefficient (double*)
-//! @param [out] c c‐coefficient (double*)
-//! @param [in] pf Pointer to the file (FILE*)
-//! @param [in] f_name name of file (char*)
-//!
-//! @return func_status (int)
-//‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐---------------
 int read_from_file(char *f_name, FILE *point_file, coefs* quard_coefs) {
 	
 	assert(f_name != NULL); assert(point_file != NULL); assert(strlen(f_name) > 0); 
 	
-	if (fscanf(point_file, "%lf %lf %lf", &(quard_coefs -> a_coef), &(quard_coefs -> b_coef), &(quard_coefs -> c_coef)) == 3) {
+	if ((fscanf(point_file, "%lf %lf %lf", &(quard_coefs -> a_coef), &(quard_coefs -> b_coef), &(quard_coefs -> c_coef)) == 3) &&
+		isfinite(quard_coefs ->a_coef) && isfinite(quard_coefs -> b_coef) && isfinite(quard_coefs -> c_coef)) {
 		printf("We found eq. %.0lfx^2 %c_coef %.0lfx %c_coef %.0lf = 0 in your file %s.\n", quard_coefs -> a_coef, 
-			   (quard_coefs -> b_coef < 0)? '-' : '+', absolute(quard_coefs -> b_coef), (quard_coefs -> c_coef < 0)? '-' : '+', 
-			   absolute(quard_coefs -> c_coef), f_name);
+			   (quard_coefs -> b_coef < 0)? '-' : '+', fabs(quard_coefs -> b_coef), (quard_coefs -> c_coef < 0)? '-' : '+', 
+			   fabs(quard_coefs -> c_coef), f_name);
 		fclose(point_file);
 		return OK;
 	} else {
-		printf("Check if you have format (%%lg %%lg %%lg) in your file %s, try again (enter any symb. to exit, c_coef to continue).\n", f_name);
+		printf("Check if you have format (%%lg %%lg %%lg) in your file %s, try again (enter any symb. to exit, c to continue).\n", f_name);
 		fclose(point_file);
 		return ENTER_ERROR;
 	}
@@ -267,6 +193,9 @@ void eat_spaces(const char **p) {
 
 
 int parse(const char *s, coefs* quard_coefs) {
+	
+	assert(s != NULL); assert(quard_coefs != NULL);
+	
 	coefs ans = {.a_coef = 0, .b_coef = 0, .c_coef = 0};
 	int side = 1, sign = 1, power = 0;
 	double coef = 1;
@@ -336,15 +265,6 @@ int parse(const char *s, coefs* quard_coefs) {
 }
 
 
-//‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐
-//! Getting coefs for a square equation ax^2 + bx + c = 0
-//!
-//! @param [out] a pointer on a a‐coefficient (double*)
-//! @param [out] b pointer on a b‐coefficient (double*)
-//! @param [out] c pointer on a c‐coefficient (double*)
-//!
-//! @return (void)
-//‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐---------------
 int enter_coef(coefs* quard_coefs, bool *first_time_f, char* curr_input) {
 	
 	assert((quard_coefs -> a_coef != quard_coefs -> b_coef) && 
@@ -354,8 +274,9 @@ int enter_coef(coefs* quard_coefs, bool *first_time_f, char* curr_input) {
 	
 	char tryier = 0;
 	char buffer[BUFFSIZE];
+	char path_name[BUFFSIZE] = "files/";
 	
-	if (!*first_time_f && getchar() != 'c') {
+	if (!*first_time_f && tolower(getchar()) != 'c') {
 		printf("You exited my program("); exit(0);
 	} 
 	
@@ -387,7 +308,8 @@ int enter_coef(coefs* quard_coefs, bool *first_time_f, char* curr_input) {
 		
 		else {
 			ungetc(tryier, stdin);
-			if (scanf("%lg %lg %lg", &(quard_coefs -> a_coef), &(quard_coefs -> b_coef), &(quard_coefs -> c_coef)) != 3) {
+			if ((scanf("%lg %lg %lg", &(quard_coefs -> a_coef), &(quard_coefs -> b_coef), &(quard_coefs -> c_coef)) != 3) ||
+				!isfinite(quard_coefs -> a_coef) || !isfinite(quard_coefs -> b_coef) || !isfinite(quard_coefs -> c_coef)) {
 				printf("Make sure, that you entered 3 nums in format (%%lg %%lg %%lg)."
 					   "\nTry again (enter any symb. to exit, c to continue).");
 				eat_char();
@@ -403,12 +325,8 @@ int enter_coef(coefs* quard_coefs, bool *first_time_f, char* curr_input) {
 		}
 		
 		
-		
-		//ungetc(tryier, stdin);
-		
-		
 	} else if (check_if_txt(curr_input)) {
-		FILE *pf = fopen(curr_input, "r");
+		FILE* pf = fopen(strcat(path_name, curr_input), "r");
 		if (pf == NULL) {
 			printf("Error while opening file %s"
 				   "\nTry again (enter any symb. to exit, c to continue).\n", curr_input);
@@ -432,6 +350,30 @@ int enter_coef(coefs* quard_coefs, bool *first_time_f, char* curr_input) {
 }
 
 
+int simple_enter(coefs* quard_coefs) {
+	
+	printf("Please, enter coef of quadr. eq. (a, b, c): ");
+	
+	if ((scanf("%lg %lg %lg", &(quard_coefs -> a_coef), &(quard_coefs -> b_coef), &(quard_coefs -> c_coef)) != 3) ||
+		!isfinite(quard_coefs -> a_coef) || !isfinite(quard_coefs -> b_coef) || !isfinite(quard_coefs -> c_coef)) {
+		printf("Make sure, that you entered 3 nums in format (%%lg %%lg %%lg)."
+			   "\nTry again (enter any symb. to exit, c to continue).");
+		eat_char();
+		return ENTER_ERROR;
+		
+	} 
+	if ((getchar()) != '\n') {
+		printf("Make sure, that you entered 3 nums in format (%%lg %%lg %%lg)."
+			   "\nTry again (enter any symb. to exit, c to continue).");
+		eat_char();
+		return ENTER_ERROR;
+	}
+	
+	correct_display(*quard_coefs, stdin);
+	return OK;
+}
+
+
 void swap(double* a, double* b) {
 	double temp = *a;
 	*a = *b;
@@ -439,52 +381,24 @@ void swap(double* a, double* b) {
 }
 
 
-//‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐
-//! Says if two double nums almost same
-//!
-//! @param [in] a first-num (double)
-//! @param [in] b second-num (double)
-//! @param [in] w err_var (double)
-//!
-//! @return Equalition of double nums (bool)
-//‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐---------------
 bool double_eq(double a, double b, double w) {
 	return (a - w < b && b < a + w);
 }
 
 
-//‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐
-//! Displays two complex colutions
-//!
-//! @param [in] x1 Pointer to the 1st root (complex_num*)
-//! @param [in] x2 Pointer to the 2nd root (complex_num*)
-//!
-//! @return (void)
-//‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐---------------
 void display_complex(FILE *pf, complex_num *x1, complex_num *x2) {	
 	assert((x1 != x2) && (x1 != NULL));
 	
-	fprintf(pf, "Your eq. has 2 complex solutions:\n\tx1 = %.2lf %c %.2lfi\n\tx2 = %.2lf %c %.2lfi\n", 
-		   x1 -> real, (x1 -> imag < 0)? '-' : '+', absolute(x1 -> imag), 
-		   x2 -> real, (x2 -> imag < 0)? '-' : '+', absolute(x2 -> imag)
+	fprintf(pf, "Your eq. has 2 complex solutions:\n\tx1 = %.2lg %c %.2lgi\n\tx2 = %.2lg %c %.2lgi\n", 
+		   x1 -> real, (x1 -> imag < 0)? '-' : '+', fabs(x1 -> imag), 
+		   x2 -> real, (x2 -> imag < 0)? '-' : '+', fabs(x2 -> imag)
 		   );
 }
 
 
-//‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐
-//! Writes an answer for a square equation ax^2 + bx + c = 0 in file
-//!
-//! @param [in] a a‐coefficient (double)
-//! @param [in] b b‐coefficient (double)
-//! @param [in] c c‐coefficient (double)
-//! @param [in] x1 solution1 (double)
-//! @param [in] x2 solution2 (double)
-//! @param [in] root_status (SOLUTIONS_NUM);
-//!
-//! @return func_status (int)
-//‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐---------------
 enum RETURN_CODES write_to_file(coefs quard_coefs, double x1, double x2, enum SOLUTONS_NUM root_status) {
 	char save_file[BUFFSIZE];
+	char path_name[BUFFSIZE] = "files/";
 	FILE *fp = NULL;
 	
 	while (true) {
@@ -501,7 +415,7 @@ enum RETURN_CODES write_to_file(coefs quard_coefs, double x1, double x2, enum SO
 		else break;
 	}
 	
-	if ((fp = fopen(save_file, "w")) == NULL) {
+	if ((fp = fopen(strcat(path_name, save_file), "w")) == NULL) {
 		printf("Unable to open file %s", save_file); return FILE_ERROR;
 	}
 	
@@ -515,7 +429,8 @@ enum RETURN_CODES write_to_file(coefs quard_coefs, double x1, double x2, enum SO
 
 void draw_parabola(coefs quard_coefs) {
 	print_line(200);
-	char *screen = (char*)malloc(HEIGHT * WIDTH * sizeof(char));
+	
+	char *screen = (char*)calloc(HEIGHT * WIDTH, sizeof(char));
 	if (screen == NULL) {
 		printf("Memory ERROR\n");
 		return;
@@ -610,4 +525,50 @@ void draw_parabola(coefs quard_coefs) {
 	
 	free(screen);
 	print_line(200);
+	
+	little_parabolka();
+	
+}
+
+
+void little_parabolka() {
+		printf("Wanna draw parabola in other dots? (y/n): ");
+	if (getchar() == 'y') {
+		eat_char();
+		
+		struct dot dot1 = {}, dot2 = {}, dot3 = {};
+		
+		while (true) {
+			printf("Enter dots, where you want to build a parabola (x1, y1, x2, y2, x3, y3)\n");
+			if (scanf("%lg %lg %lg %lg %lg %lg", &(dot1.x), &(dot1.y), &(dot2.x), &(dot2.y), &(dot3.x), &(dot3.y)) == 6 && isfinite(dot1.x) && isfinite(dot1.y) && 
+				isfinite(dot2.x) && isfinite(dot2.y) && isfinite(dot3.x) && isfinite(dot3.y)) {
+				
+				eat_char();
+				
+				double A1 = -pow(dot1.x, 2) + pow(dot2.x, 2), B1 = dot2.x - dot1.x, D1 = dot2.y - dot1.y,
+				A2 = pow(dot3.x, 2) - pow(dot2.x, 2), B2 = dot3.x - dot2.x, D2 = dot3.y - dot2.y;
+				
+				double B_mult = -(B2/B1), A3 = B_mult * A1 + A2, D3 = B_mult * D1 + D2;
+				double a_coef = D3/A3, b_coef = (D1 - A1 * a_coef) / B1, c_coef = dot1.y - a_coef * pow(dot1.x, 2) - b_coef * dot1.x; 
+				
+				
+				coefs coefs_by_dots = {
+					.a_coef = a_coef,
+					.b_coef = b_coef,
+					.c_coef = c_coef
+				};
+				
+				draw_parabola(coefs_by_dots);
+				break;
+			}
+			
+			else {
+				printf("Make sure that you are in format (%%lg %%lg %%lg %%lg %%lg %%lg) and try again\n");
+				eat_char();
+			}
+		}
+	}
+	else {
+		eat_char();
+	}
 }
