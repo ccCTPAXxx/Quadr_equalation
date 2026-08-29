@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "headers/ai.h"
+#include "ai.h"
 
 #define X_SIZE 3
 #define Y_SIZE 3

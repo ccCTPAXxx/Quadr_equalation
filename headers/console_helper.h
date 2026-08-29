@@ -1,3 +1,6 @@
+#include <stdbool.h>
+
+
 #ifndef _CONSOLE_HELPER
 #define _CONSOLE_HELPER
 
